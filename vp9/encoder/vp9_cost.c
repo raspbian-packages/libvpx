@@ -37,7 +37,7 @@ const uint16_t vp9_prob_cost[256] = {
     48,   45,   42,   38,   35,   32,   29,   26,   23,   20,   18,   15,
     12,   9,    6,    3};
 
-static void cost(int *costs, vpx_tree tree, const vpx_prob *probs,
+static void cost(int *costs, vpx_tree_p tree, const vpx_prob *probs,
                  int i, int c) {
   const vpx_prob prob = probs[i / 2];
   int b;
@@ -54,11 +54,11 @@ static void cost(int *costs, vpx_tree tree, const vpx_prob *probs,
   }
 }
 
-void vp9_cost_tokens(int *costs, const vpx_prob *probs, vpx_tree tree) {
+void vp9_cost_tokens(int *costs, const vpx_prob *probs, vpx_tree_p tree) {
   cost(costs, tree, probs, 0, 0);
 }
 
-void vp9_cost_tokens_skip(int *costs, const vpx_prob *probs, vpx_tree tree) {
+void vp9_cost_tokens_skip(int *costs, const vpx_prob *probs, vpx_tree_p tree) {
   assert(tree[0] <= 0 && tree[1] > 0);
 
   costs[-tree[0]] = vp9_cost_bit(probs[0], 0);
