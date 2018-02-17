@@ -1,0 +1,3 @@
+Tests: encode-testimage
+Depends: ffmpeg, vpx-tools
+Restrictions: allow-stderr
