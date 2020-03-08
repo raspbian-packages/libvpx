@@ -1,0 +1,7 @@
+fix-armhf-link.patch
+Bug-fix-in-ssse3-quantize-function.patch
+vp9-out-of-bounds-access.patch
+CVE-2017-13194.patch
+CVE-2019-9433.patch
+CVE-2019-9232.patch
+CVE-2020-0034.patch
