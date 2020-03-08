@@ -799,7 +799,6 @@ process_common_toolchain() {
 
         case ${tgt_cc} in
         gcc)
-            CROSS=${CROSS:-arm-none-linux-gnueabi-}
             link_with_cc=gcc
             setup_gnu_toolchain
             arch_int=${tgt_isa##armv}
@@ -821,10 +820,6 @@ EOF
                 then
                     check_add_cflags -mfpu=neon #-ftree-vectorize
                     check_add_asflags -mfpu=neon
-                fi
-
-                if [ -z "${tune_cpu}" ]; then
-                    tune_cpu=cortex-a8
                 fi
             else
                 check_add_cflags -march=${tgt_isa}
