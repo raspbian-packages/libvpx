@@ -63,7 +63,7 @@ static int vp9_read(vp9_reader *br, int probability) {
   }
 
   {
-    register unsigned int shift = vp9_norm[range];
+    register unsigned char shift = vp9_norm[(unsigned char)range];
     range <<= shift;
     value <<= shift;
     count -= shift;
