@@ -1,0 +1,5 @@
+#! /usr/bin/dh-exec --with-scripts=subst-multiarch
+builddir/vpx-vp8-*/lib/libvpx.so /usr/lib/${DEB_HOST_MULTIARCH}/
+builddir/vpx-vp8-*/lib/libvpx.a /usr/lib/${DEB_HOST_MULTIARCH}/
+builddir/vpx-vp8-*/include/vpx usr/include
+builddir/vpx-vp8-*/lib/pkgconfig usr/lib/${DEB_HOST_MULTIARCH}/
