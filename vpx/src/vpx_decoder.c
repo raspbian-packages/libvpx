@@ -27,7 +27,7 @@ vpx_codec_err_t vpx_codec_dec_init_ver(vpx_codec_ctx_t *ctx,
                                        vpx_codec_flags_t flags, int ver) {
   vpx_codec_err_t res;
 
-  if (ver != VPX_DECODER_ABI_VERSION)
+  if (ver > VPX_DECODER_ABI_VERSION)
     res = VPX_CODEC_ABI_MISMATCH;
   else if (!ctx || !iface)
     res = VPX_CODEC_INVALID_PARAM;
