@@ -1,0 +1,69 @@
+Source: libvpx
+Section: video
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Uploaders: Sebastian Dröge <slomo@debian.org>,
+           Ondřej Nový <onovy@debian.org>,
+Build-Depends: debhelper-compat (= 13),
+               yasm [amd64 i386 hurd-i386 kfreebsd-amd64 kfreebsd-i386],
+               dh-exec
+Build-Depends-Indep: doxygen
+Standards-Version: 4.6.0
+Homepage: https://www.webmproject.org
+Vcs-Git: https://salsa.debian.org/multimedia-team/libvpx.git
+Vcs-Browser: https://salsa.debian.org/multimedia-team/libvpx
+Rules-Requires-Root: no
+
+Package: libvpx-dev
+Section: libdevel
+Architecture: any
+Depends: libvpx7 (= ${binary:Version}),
+         ${misc:Depends}
+Multi-Arch: same
+Description: VP8 and VP9 video codec (development files)
+ VP8 and VP9 are open video codecs, originally developed by On2 and released
+ as open source by Google Inc. They are the successor of the VP3 codec,
+ on which the Theora codec was based.
+ .
+ This package contains the development libraries, header files needed by
+ programs that want to compile with libvpx.
+
+Package: libvpx7
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Multi-Arch: same
+Description: VP8 and VP9 video codec (shared library)
+ VP8 and VP9 are open video codecs, originally developed by On2 and released
+ as open source by Google Inc. They are the successor of the VP3 codec,
+ on which the Theora codec was based.
+ .
+ This package contains the shared libraries.
+
+Package: libvpx-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Recommends: lynx | www-browser
+Description: VP8 and VP9 video codec (API documentation)
+ VP8 and VP9 are open video codecs, originally developed by On2 and released
+ as open source by Google Inc. They are the successor of the VP3 codec,
+ on which the Theora codec was based.
+ .
+ This package contains the HTML documentation for the libvpx library
+ in /usr/share/doc/libvpx-doc.
+
+Package: vpx-tools
+Section: utils
+Architecture: any
+Depends: libvpx7 (= ${binary:Version}),
+         ${shlibs:Depends},
+         ${misc:Depends}
+Description: VP8 and VP9 video codec encoding/decoding tools
+ VP8 and VP9 are open video codecs, originally developed by On2 and released
+ as open source by Google Inc. They are the successor of the VP3 codec,
+ on which the Theora codec was based.
+ .
+ This package contains the commandline tools vpxdec and vpxenc.
