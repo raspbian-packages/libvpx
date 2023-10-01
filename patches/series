@@ -1,0 +1,4 @@
+0001-Relax-ABI-check.patch
+0002-encode_api_test-add-ConfigResizeChangeThreadCount.patch
+0003-VP8-disallow-thread-count-changes.patch
+0004-Fix-bug-with-smaller-width-bigger-size.patch
