@@ -8,6 +8,8 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
+#include <assert.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -24,6 +26,14 @@ static vpx_image_t *img_alloc_helper(vpx_image_t *img, vpx_img_fmt_t fmt,
   uint64_t s;
   int stride_in_bytes;
   int align;
+
+  /* Impose maximum values on input parameters so that this function can
+   * perform arithmetic operations without worrying about overflows.
+   */
+  if (d_w > 0x08000000 || d_h > 0x08000000 || buf_align > 65536 ||
+      stride_align > 65536) {
+    goto fail;
+  }
 
   /* Treat align==0 like align==1 */
   if (!buf_align) buf_align = 1;
@@ -117,8 +127,10 @@ static vpx_image_t *img_alloc_helper(vpx_image_t *img, vpx_img_fmt_t fmt,
     /* Calculate storage sizes given the chroma subsampling */
     align = (1 << xcs) - 1;
     w = (d_w + align) & ~align;
+    assert(d_w <= w);
     align = (1 << ycs) - 1;
     h = (d_h + align) & ~align;
+    assert(d_h <= h);
 
     s = (fmt & VPX_IMG_FMT_PLANAR) ? w : (uint64_t)bps * w / 8;
     s = (s + stride_align - 1) & ~((uint64_t)stride_align - 1);
