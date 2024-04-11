@@ -56,3 +56,34 @@ TEST(VpxImageTest, VpxImgAllocNone) {
   unsigned int align = 32;
   ASSERT_EQ(vpx_img_alloc(&img, format, kWidth, kHeight, align), nullptr);
 }
+
+TEST(VpxImageTest, VpxImgAllocHugeWidth) {
+  // The stride (0x80000000 * 2) would overflow unsigned int.
+  vpx_image_t *image =
+      vpx_img_alloc(nullptr, VPX_IMG_FMT_I42016, 0x80000000, 1, 1);
+  ASSERT_EQ(image, nullptr);
+
+  // The stride (0x80000000) would overflow int.
+  image = vpx_img_alloc(nullptr, VPX_IMG_FMT_I420, 0x80000000, 1, 1);
+  ASSERT_EQ(image, nullptr);
+
+  image = vpx_img_alloc(nullptr, VPX_IMG_FMT_I420, 0x7ffffffe, 1, 1);
+  if (image) {
+    vpx_img_free(image);
+  }
+
+  image = vpx_img_alloc(nullptr, VPX_IMG_FMT_I420, 285245883, 64, 1);
+  if (image) {
+    vpx_img_free(image);
+  }
+
+  image = vpx_img_alloc(nullptr, VPX_IMG_FMT_YV12, 285245883, 64, 1);
+  if (image) {
+    vpx_img_free(image);
+  }
+
+  image = vpx_img_alloc(nullptr, VPX_IMG_FMT_I42016, 285245883, 2, 1);
+  if (image) {
+    vpx_img_free(image);
+  }
+}
