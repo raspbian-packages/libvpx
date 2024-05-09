@@ -1,0 +1,9 @@
+Document: libvpx-doc
+Title: WebM Codec SDK
+Author: Google, Inc.
+Abstract: SDK allows you to integrate your applications with the VP8 and VP9 video codecs
+Section: Programming/C++
+
+Format: HTML
+Index: /usr/share/doc/libvpx-doc/html/index.html
+Files: /usr/share/doc/libvpx-doc/html/*
