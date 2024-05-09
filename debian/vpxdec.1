@@ -1,0 +1,123 @@
+.TH VPXDEC "1" "August 2016"
+.SH NAME
+vpxdec \- VP8 and VP9 video decoding encoding tool
+.SH SYNOPSIS
+.B vpxdec
+\fI\,<options> -o dst_filename src_filename\/\fR
+.SH OPTIONS
+.TP
+\fB\-\-codec=\fR<arg>
+Codec to use
+.TP
+\fB\-\-yv12\fR
+Output raw YV12 frames
+.TP
+\fB\-\-i420\fR
+Output raw I420 frames
+.TP
+\fB\-\-flipuv\fR
+Flip the chroma planes in the output
+.TP
+\fB\-\-rawvideo\fR
+Output raw YUV frames
+.TP
+\fB\-\-noblit\fR
+Don't process the decoded frames
+.TP
+\fB\-\-progress\fR
+Show progress after each frame decodes
+.TP
+\fB\-\-limit=\fR<arg>
+Stop decoding after n frames
+.TP
+\fB\-\-skip=\fR<arg>
+Skip the first n input frames
+.TP
+\fB\-\-postproc\fR
+Postprocess decoded frames
+.TP
+\fB\-\-summary\fR
+Show timing summary
+.TP
+\fB\-o\fR <arg>, \fB\-\-output=\fR<arg>
+Output file name pattern (see below)
+.TP
+\fB\-t\fR <arg>, \fB\-\-threads=\fR<arg>
+Max threads to use
+.TP
+\fB\-\-frame\-parallel\fR
+Frame parallel decode
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Show version string
+.TP
+\fB\-S\fR, \fB\-\-scale\fR
+Scale output frames uniformly
+.TP
+\fB\-\-frame\-buffers=\fR<arg>
+Number of frame buffers to use
+.TP
+\fB\-\-md5\fR
+Compute the MD5 sum of the decoded frame
+.TP
+\fB\-\-error\-concealment\fR
+Enable decoder error\-concealment
+.TP
+\fB\-k\fR, \fB\-\-keep\-going\fR
+(debug) Continue decoding after error
+.SS "VP8 Postprocessing Options:"
+.TP
+\fB\-\-noise\-level=\fR<arg>
+Enable VP8 postproc add noise
+.TP
+\fB\-\-deblock\fR
+Enable VP8 deblocking
+.TP
+\fB\-\-demacroblock\-level=\fR<arg>
+Enable VP8 demacroblocking, w/ level
+.TP
+\fB\-\-pp\-debug\-info=\fR<arg>
+Enable VP8 visible debug info
+.TP
+\fB\-\-pp\-dbg\-ref\-frame=\fR<arg>
+Display only selected reference frame per macro block
+.TP
+\fB\-\-pp\-dbg\-mb\-modes=\fR<arg>
+Display only selected macro block modes
+.TP
+\fB\-\-pp\-dbg\-b\-modes=\fR<arg>
+Display only selected block modes
+.TP
+\fB\-\-pp\-dbg\-mvs=\fR<arg>
+Draw only selected motion vectors
+.TP
+\fB\-\-mfqe\fR
+Enable multiframe quality enhancement
+.PP
+.SS "Output File Patterns:"
+.IP
+The \fB\-o\fR argument specifies the name of the file(s) to write to. If the
+argument does not include any escape characters, the output will be
+written to a single file. Otherwise, the filename will be calculated by
+expanding the following escape characters:
+.TP
+%w
+\- Frame width
+.TP
+%h
+\- Frame height
+.IP
+%<n> \- Frame number, zero padded to <n> places (1..9)
+.IP
+Pattern arguments are only supported in conjunction with the \fB\-\-yv12\fR and
+\fB\-\-i420\fR options. If the \fB\-o\fR option is not specified, the output will be
+directed to stdout.
+.PP
+.SS "Included decoders:"
+.TP
+vp8
+\- WebM Project VP8 Decoder v1.6.0
+.TP
+vp9
+\- WebM Project VP9 Decoder v1.6.0
+.PP
