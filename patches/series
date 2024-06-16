@@ -1,0 +1,7 @@
+CVE-2019-9232_9325_9371_9433.patch
+CVE-2023-5217.patch
+CVE-2023-44488.patch
+0001-Add-test-vpx_image_test.cc.patch
+0002-Fix-integer-overflows-in-calc-of-stride_in_bytes.patch
+0003-Avoid-integer-overflows-in-arithmetic-operations.patch
+0004-Fix-a-bug-in-alloc_size-for-high-bit-depths.patch
