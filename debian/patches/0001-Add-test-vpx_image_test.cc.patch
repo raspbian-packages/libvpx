@@ -1,0 +1,81 @@
+From 9a95107fa72b507469ddb2872725cbe978f9e0db Mon Sep 17 00:00:00 2001
+From: Wan-Teh Chang <wtc@google.com>
+Date: Wed, 10 Apr 2024 17:55:01 -0700
+Subject: Add test/vpx_image_test.cc
+
+Ported from test/aom_image_test.cc in libaom commit 04d6253.
+
+Change-Id: I56478d0a5603cfb5b65e644add0918387ff69a00
+(cherry picked from commit 3dbab0e66479e1b5368d4b7a069051dba85843cf)
+---
+ test/test.mk           |  1 +
+ test/vpx_image_test.cc | 45 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 test/vpx_image_test.cc
+
+diff --git a/test/test.mk b/test/test.mk
+index 6df457290..f2566dd73 100644
+--- a/test/test.mk
++++ b/test/test.mk
+@@ -19,6 +19,7 @@ LIBVPX_TEST_SRCS-yes += video_source.h
+ ## Black box tests only use the public API.
+ ##
+ LIBVPX_TEST_SRCS-yes                   += ../md5_utils.h ../md5_utils.c
++LIBVPX_TEST_SRCS-yes                   += vpx_image_test.cc
+ LIBVPX_TEST_SRCS-$(CONFIG_DECODERS)    += ivf_video_source.h
+ LIBVPX_TEST_SRCS-$(CONFIG_ENCODERS)    += ../y4minput.h ../y4minput.c
+ LIBVPX_TEST_SRCS-$(CONFIG_ENCODERS)    += altref_test.cc
+diff --git a/test/vpx_image_test.cc b/test/vpx_image_test.cc
+new file mode 100644
+index 000000000..c93843c1e
+--- /dev/null
++++ b/test/vpx_image_test.cc
+@@ -0,0 +1,45 @@
++/*
++ *  Copyright (c) 2024 The WebM project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#include "vpx/vpx_image.h"
++#include "third_party/googletest/src/include/gtest/gtest.h"
++
++TEST(VpxImageTest, VpxImgWrapInvalidAlign) {
++  const int kWidth = 128;
++  const int kHeight = 128;
++  unsigned char buf[kWidth * kHeight * 3];
++
++  vpx_image_t img;
++  // Set img_data and img_data_owner to junk values. vpx_img_wrap() should
++  // not read these values on failure.
++  unsigned char empty[] = "";
++  img.img_data = empty;
++  img.img_data_owner = 1;
++
++  vpx_img_fmt_t format = VPX_IMG_FMT_I444;
++  // 'align' must be a power of 2 but is not. This causes the vpx_img_wrap()
++  // call to fail. The test verifies we do not read the junk values in 'img'.
++  unsigned int align = 31;
++  EXPECT_EQ(vpx_img_wrap(&img, format, kWidth, kHeight, align, buf), nullptr);
++}
++
++TEST(VpxImageTest, VpxImgAllocNv12) {
++  const int kWidth = 128;
++  const int kHeight = 128;
++
++  vpx_image_t img;
++  vpx_img_fmt_t format = VPX_IMG_FMT_NV12;
++  unsigned int align = 32;
++  EXPECT_EQ(vpx_img_alloc(&img, format, kWidth, kHeight, align), &img);
++  EXPECT_EQ(img.stride[VPX_PLANE_U], img.stride[VPX_PLANE_Y]);
++  EXPECT_EQ(img.stride[VPX_PLANE_V], img.stride[VPX_PLANE_U]);
++  EXPECT_EQ(img.planes[VPX_PLANE_V], img.planes[VPX_PLANE_U] + 1);
++  vpx_img_free(&img);
++}
+-- 
+2.30.2
+
