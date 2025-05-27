@@ -1,0 +1,46 @@
+From 28769a88ab54be873842feb799e20ec3e097aa4f Mon Sep 17 00:00:00 2001
+From: Wan-Teh Chang <wtc@google.com>
+Date: Fri, 12 Apr 2024 15:48:04 -0700
+Subject: Fix a bug in alloc_size for high bit depths
+
+I introduced this bug in commit 2e32276:
+https://chromium-review.googlesource.com/c/webm/libvpx/+/5446333
+
+I changed the line
+
+  stride_in_bytes = (fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? s * 2 : s;
+
+to three lines:
+
+  s = (fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? s * 2 : s;
+  if (s > INT_MAX) goto fail;
+  stride_in_bytes = (int)s;
+
+But I didn't realize that `s` is used later in the calculation of
+alloc_size.
+
+As a quick fix, undo the effect of s * 2 for high bit depths after `s`
+has been assigned to stride_in_bytes.
+
+Bug: chromium:332382766
+Change-Id: I53fbf405555645ab1d7254d31aadabe4f426be8c
+(cherry picked from commit 74c70af01667733483dc69298b8921779f5f6ff3)
+---
+ vpx/src/vpx_image.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/vpx/src/vpx_image.c b/vpx/src/vpx_image.c
+index 373b80b60..fc6ff722b 100644
+--- a/vpx/src/vpx_image.c
++++ b/vpx/src/vpx_image.c
+@@ -95,6 +95,7 @@ static vpx_image_t *img_alloc_helper(vpx_image_t *img, vpx_img_fmt_t fmt,
+   s = (fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? s * 2 : s;
+   if (s > INT_MAX) goto fail;
+   stride_in_bytes = (int)s;
++  s = (fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? s / 2 : s;
+ 
+   /* Allocate the new image */
+   if (!img) {
+-- 
+2.30.2
+

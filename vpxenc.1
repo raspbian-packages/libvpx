@@ -1,0 +1,651 @@
+.TH VPXENC "1" "August 2016"
+.SH NAME
+vpxenc \- VP8 and VP9 video codec encoding tool
+.SH SYNOPSIS
+.B vpxenc
+\fI\,<options> -o dst_filename src_filename\/\fR
+.SH OPTIONS
+.TP
+\fB\-D\fR, \fB\-\-debug\fR
+Debug mode (makes output deterministic)
+.TP
+\fB\-o\fR <arg>, \fB\-\-output=\fR<arg>
+Output filename
+.TP
+\fB\-\-codec=\fR<arg>
+Codec to use
+.TP
+\fB\-p\fR <arg>, \fB\-\-passes=\fR<arg>
+Number of passes (1/2)
+.TP
+\fB\-\-pass=\fR<arg>
+Pass to execute (1/2)
+.TP
+\fB\-\-fpf=\fR<arg>
+First pass statistics file name
+.TP
+\fB\-\-limit=\fR<arg>
+Stop encoding after n input frames
+.TP
+\fB\-\-skip=\fR<arg>
+Skip the first n input frames
+.TP
+\fB\-d\fR <arg>, \fB\-\-deadline=\fR<arg>
+Deadline per frame (usec)
+.TP
+\fB\-\-best\fR
+Use Best Quality Deadline
+.TP
+\fB\-\-good\fR
+Use Good Quality Deadline
+.TP
+\fB\-\-rt\fR
+Use Realtime Quality Deadline
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Do not print encode progress
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Show encoder parameters
+.TP
+\fB\-\-psnr\fR
+Show PSNR in status line
+.TP
+\fB\-\-webm\fR
+Output WebM (default when WebM IO is enabled)
+.TP
+\fB\-\-ivf\fR
+Output IVF
+.TP
+\fB\-P\fR, \fB\-\-output\-partitions\fR
+Makes encoder output partitions. Requires IVF output!
+.TP
+\fB\-\-q\-hist=\fR<arg>
+Show quantizer histogram (n\-buckets)
+.TP
+\fB\-\-rate\-hist=\fR<arg>
+Show rate histogram (n\-buckets)
+.TP
+\fB\-\-disable\-warnings\fR
+Disable warnings about potentially incorrect encode settings.
+.TP
+\fB\-y\fR, \fB\-\-disable\-warning\-prompt\fR
+Display warnings, but do not prompt user to continue.
+.TP
+\fB\-\-test\-decode=\fR<arg>
+Test encode/decode mismatch
+.IP
+off, fatal, warn
+.SS "Encoder Global Options:"
+.TP
+\fB\-\-yv12\fR
+Input file is YV12
+.TP
+\fB\-\-i420\fR
+Input file is I420 (default)
+.TP
+\fB\-\-i422\fR
+Input file is I422
+.TP
+\fB\-\-i444\fR
+Input file is I444
+.TP
+\fB\-\-i440\fR
+Input file is I440
+.TP
+\fB\-u\fR <arg>, \fB\-\-usage=\fR<arg>
+Usage profile number to use
+.TP
+\fB\-t\fR <arg>, \fB\-\-threads=\fR<arg>
+Max number of threads to use
+.TP
+\fB\-\-profile=\fR<arg>
+Bitstream profile number to use
+.TP
+\fB\-w\fR <arg>, \fB\-\-width=\fR<arg>
+Frame width
+.TP
+\fB\-h\fR <arg>, \fB\-\-height=\fR<arg>
+Frame height
+.TP
+\fB\-\-stereo\-mode=\fR<arg>
+Stereo 3D video format
+.IP
+mono, left\-right, bottom\-top, top\-bottom, right\-left
+.TP
+\fB\-\-timebase=\fR<arg>
+Output timestamp precision (fractional seconds)
+.TP
+\fB\-\-fps=\fR<arg>
+Stream frame rate (rate/scale)
+.TP
+\fB\-\-error\-resilient=\fR<arg>
+Enable error resiliency features
+.TP
+\fB\-\-lag\-in\-frames=\fR<arg>
+Max number of frames to lag
+.SS "Rate Control Options:"
+.TP
+\fB\-\-drop\-frame=\fR<arg>
+Temporal resampling threshold (buf %)
+.TP
+\fB\-\-resize\-allowed=\fR<arg>
+Spatial resampling enabled (bool)
+.TP
+\fB\-\-resize\-width=\fR<arg>
+Width of encoded frame
+.TP
+\fB\-\-resize\-height=\fR<arg>
+Height of encoded frame
+.TP
+\fB\-\-resize\-up=\fR<arg>
+Upscale threshold (buf %)
+.TP
+\fB\-\-resize\-down=\fR<arg>
+Downscale threshold (buf %)
+.TP
+\fB\-\-end\-usage=\fR<arg>
+Rate control mode
+.IP
+vbr, cbr, cq, q
+.TP
+\fB\-\-target\-bitrate=\fR<arg>
+Bitrate (kbps)
+.TP
+\fB\-\-min\-q=\fR<arg>
+Minimum (best) quantizer
+.TP
+\fB\-\-max\-q=\fR<arg>
+Maximum (worst) quantizer
+.TP
+\fB\-\-undershoot\-pct=\fR<arg>
+Datarate undershoot (min) target (%)
+.TP
+\fB\-\-overshoot\-pct=\fR<arg>
+Datarate overshoot (max) target (%)
+.TP
+\fB\-\-buf\-sz=\fR<arg>
+Client buffer size (ms)
+.TP
+\fB\-\-buf\-initial\-sz=\fR<arg>
+Client initial buffer size (ms)
+.TP
+\fB\-\-buf\-optimal\-sz=\fR<arg>
+Client optimal buffer size (ms)
+.SS "Twopass Rate Control Options:"
+.TP
+\fB\-\-bias\-pct=\fR<arg>
+CBR/VBR bias (0=CBR, 100=VBR)
+.TP
+\fB\-\-minsection\-pct=\fR<arg>
+GOP min bitrate (% of target)
+.TP
+\fB\-\-maxsection\-pct=\fR<arg>
+GOP max bitrate (% of target)
+.SS "Keyframe Placement Options:"
+.TP
+\fB\-\-kf\-min\-dist=\fR<arg>
+Minimum keyframe interval (frames)
+.TP
+\fB\-\-kf\-max\-dist=\fR<arg>
+Maximum keyframe interval (frames)
+.TP
+\fB\-\-disable\-kf\fR
+Disable keyframe placement
+.SS "VP8 Specific Options:"
+.TP
+\fB\-\-cpu\-used=\fR<arg>
+CPU Used (\fB\-16\fR..16)
+.TP
+\fB\-\-auto\-alt\-ref=\fR<arg>
+Enable automatic alt reference frames
+.TP
+\fB\-\-noise\-sensitivity=\fR<arg>
+Noise sensitivity (frames to blur)
+.TP
+\fB\-\-sharpness=\fR<arg>
+Loop filter sharpness (0..7)
+.TP
+\fB\-\-static\-thresh=\fR<arg>
+Motion detection threshold
+.TP
+\fB\-\-token\-parts=\fR<arg>
+Number of token partitions to use, log2
+.TP
+\fB\-\-arnr\-maxframes=\fR<arg>
+AltRef max frames (0..15)
+.TP
+\fB\-\-arnr\-strength=\fR<arg>
+AltRef filter strength (0..6)
+.TP
+\fB\-\-arnr\-type=\fR<arg>
+AltRef type
+.TP
+\fB\-\-tune=\fR<arg>
+Material to favor
+.IP
+psnr, ssim
+.TP
+\fB\-\-cq\-level=\fR<arg>
+Constant/Constrained Quality level
+.TP
+\fB\-\-max\-intra\-rate=\fR<arg>
+Max I\-frame bitrate (pct)
+.TP
+\fB\-\-screen\-content\-mode=\fR<arg
+Screen content mode
+.SS "VP9 Specific Options:"
+.TP
+\fB\-\-cpu\-used=\fR<arg>
+CPU Used (\fB\-8\fR..8)
+.TP
+\fB\-\-auto\-alt\-ref=\fR<arg>
+Enable automatic alt reference frames
+.TP
+\fB\-\-sharpness=\fR<arg>
+Loop filter sharpness (0..7)
+.TP
+\fB\-\-static\-thresh=\fR<arg>
+Motion detection threshold
+.TP
+\fB\-\-tile\-columns=\fR<arg>
+Number of tile columns to use, log2
+.TP
+\fB\-\-tile\-rows=\fR<arg>
+Number of tile rows to use, log2 (set to 0 while threads > 1)
+.TP
+\fB\-\-arnr\-maxframes=\fR<arg>
+AltRef max frames (0..15)
+.TP
+\fB\-\-arnr\-strength=\fR<arg>
+AltRef filter strength (0..6)
+.TP
+\fB\-\-arnr\-type=\fR<arg>
+AltRef type
+.TP
+\fB\-\-tune=\fR<arg>
+Material to favor
+.IP
+psnr, ssim
+.TP
+\fB\-\-cq\-level=\fR<arg>
+Constant/Constrained Quality level
+.TP
+\fB\-\-max\-intra\-rate=\fR<arg>
+Max I\-frame bitrate (pct)
+.TP
+\fB\-\-max\-inter\-rate=\fR<arg>
+Max P\-frame bitrate (pct)
+.TP
+\fB\-\-gf\-cbr\-boost=\fR<arg>
+Boost for Golden Frame in CBR mode (pct)
+.TP
+\fB\-\-lossless=\fR<arg>
+Lossless mode (0: false (default), 1: true)
+.TP
+\fB\-\-frame\-parallel=\fR<arg>
+Enable frame parallel decodability features
+.TP
+\fB\-\-aq\-mode=\fR<arg>
+Adaptive quantization mode (0: off (default), 1: variance 2: complexity, 3: cyclic refresh, 4: equator360)
+.TP
+\fB\-\-frame\-boost=\fR<arg>
+Enable frame periodic boost (0: off (default), 1: on)
+.TP
+\fB\-\-noise\-sensitivity=\fR<arg>
+Noise sensitivity (frames to blur)
+.TP
+\fB\-\-tune\-content=\fR<arg>
+Tune content type
+.IP
+default, screen
+.TP
+\fB\-\-color\-space=\fR<arg>
+The color space of input content:
+.IP
+unknown, bt601, bt709, smpte170, smpte240, bt2020, reserved, sRGB
+.TP
+\fB\-\-min\-gf\-interval=\fR<arg>
+min gf/arf frame interval (default 0, indicating in\-built behavior)
+.TP
+\fB\-\-max\-gf\-interval=\fR<arg>
+max gf/arf frame interval (default 0, indicating in\-built behavior)
+.TP
+\fB\-\-target\-level=\fR<arg>
+Target level (255: off (default); 0: only keep level stats; 10: level 1.0; 11: level 1.1; ... 62: level 6.2)
+.SS "Stream timebase (--timebase):"
+.IP
+The desired precision of timestamps in the output, expressed
+in fractional seconds. Default is 1/1000.
+.PP
+Included encoders:
+.TP
+vp8
+\- WebM Project VP8 Encoder v1.6.0
+.TP
+vp9
+\- WebM Project VP9 Encoder v1.6.0 (default)
+.IP
+Use \fB\-\-codec\fR to switch to a non\-default encoder.
+.TP
+\fB\-D\fR,       \fB\-\-debug\fR
+Debug mode (makes output deterministic)
+.TP
+\fB\-o\fR <arg>, \fB\-\-output=\fR<arg>
+Output filename
+.TP
+\fB\-\-codec=\fR<arg>
+Codec to use
+.TP
+\fB\-p\fR <arg>, \fB\-\-passes=\fR<arg>
+Number of passes (1/2)
+.TP
+\fB\-\-pass=\fR<arg>
+Pass to execute (1/2)
+.TP
+\fB\-\-fpf=\fR<arg>
+First pass statistics file name
+.TP
+\fB\-\-limit=\fR<arg>
+Stop encoding after n input frames
+.TP
+\fB\-\-skip=\fR<arg>
+Skip the first n input frames
+.TP
+\fB\-d\fR <arg>, \fB\-\-deadline=\fR<arg>
+Deadline per frame (usec)
+.TP
+\fB\-\-best\fR
+Use Best Quality Deadline
+.TP
+\fB\-\-good\fR
+Use Good Quality Deadline
+.TP
+\fB\-\-rt\fR
+Use Realtime Quality Deadline
+.TP
+\fB\-q\fR,       \fB\-\-quiet\fR
+Do not print encode progress
+.TP
+\fB\-v\fR,       \fB\-\-verbose\fR
+Show encoder parameters
+.TP
+\fB\-\-psnr\fR
+Show PSNR in status line
+.TP
+\fB\-\-webm\fR
+Output WebM (default when WebM IO is enabled)
+.TP
+\fB\-\-ivf\fR
+Output IVF
+.TP
+\fB\-P\fR,       \fB\-\-output\-partitions\fR
+Makes encoder output partitions. Requires IVF output!
+.TP
+\fB\-\-q\-hist=\fR<arg>
+Show quantizer histogram (n\-buckets)
+.TP
+\fB\-\-rate\-hist=\fR<arg>
+Show rate histogram (n\-buckets)
+.TP
+\fB\-\-disable\-warnings\fR
+Disable warnings about potentially incorrect encode settings.
+.TP
+\fB\-y\fR,       \fB\-\-disable\-warning\-prompt\fR
+Display warnings, but do not prompt user to continue.
+.TP
+\fB\-\-test\-decode=\fR<arg>
+Test encode/decode mismatch
+.IP
+off, fatal, warn
+.SS "Encoder Global Options:"
+.TP
+\fB\-\-yv12\fR
+Input file is YV12
+.TP
+\fB\-\-i420\fR
+Input file is I420 (default)
+.TP
+\fB\-\-i422\fR
+Input file is I422
+.TP
+\fB\-\-i444\fR
+Input file is I444
+.TP
+\fB\-\-i440\fR
+Input file is I440
+.TP
+\fB\-u\fR <arg>, \fB\-\-usage=\fR<arg>
+Usage profile number to use
+.TP
+\fB\-t\fR <arg>, \fB\-\-threads=\fR<arg>
+Max number of threads to use
+.TP
+\fB\-\-profile=\fR<arg>
+Bitstream profile number to use
+.TP
+\fB\-w\fR <arg>, \fB\-\-width=\fR<arg>
+Frame width
+.TP
+\fB\-h\fR <arg>, \fB\-\-height=\fR<arg>
+Frame height
+.TP
+\fB\-\-stereo\-mode=\fR<arg>
+Stereo 3D video format
+.IP
+mono, left\-right, bottom\-top, top\-bottom, right\-left
+.TP
+\fB\-\-timebase=\fR<arg>
+Output timestamp precision (fractional seconds)
+.TP
+\fB\-\-fps=\fR<arg>
+Stream frame rate (rate/scale)
+.TP
+\fB\-\-error\-resilient=\fR<arg>
+Enable error resiliency features
+.TP
+\fB\-\-lag\-in\-frames=\fR<arg>
+Max number of frames to lag
+.SS "Rate Control Options:"
+.TP
+\fB\-\-drop\-frame=\fR<arg>
+Temporal resampling threshold (buf %)
+.TP
+\fB\-\-resize\-allowed=\fR<arg>
+Spatial resampling enabled (bool)
+.TP
+\fB\-\-resize\-width=\fR<arg>
+Width of encoded frame
+.TP
+\fB\-\-resize\-height=\fR<arg>
+Height of encoded frame
+.TP
+\fB\-\-resize\-up=\fR<arg>
+Upscale threshold (buf %)
+.TP
+\fB\-\-resize\-down=\fR<arg>
+Downscale threshold (buf %)
+.TP
+\fB\-\-end\-usage=\fR<arg>
+Rate control mode
+.IP
+vbr, cbr, cq, q
+.TP
+\fB\-\-target\-bitrate=\fR<arg>
+Bitrate (kbps)
+.TP
+\fB\-\-min\-q=\fR<arg>
+Minimum (best) quantizer
+.TP
+\fB\-\-max\-q=\fR<arg>
+Maximum (worst) quantizer
+.TP
+\fB\-\-undershoot\-pct=\fR<arg>
+Datarate undershoot (min) target (%)
+.TP
+\fB\-\-overshoot\-pct=\fR<arg>
+Datarate overshoot (max) target (%)
+.TP
+\fB\-\-buf\-sz=\fR<arg>
+Client buffer size (ms)
+.TP
+\fB\-\-buf\-initial\-sz=\fR<arg>
+Client initial buffer size (ms)
+.TP
+\fB\-\-buf\-optimal\-sz=\fR<arg>
+Client optimal buffer size (ms)
+.SS "Twopass Rate Control Options:"
+.TP
+\fB\-\-bias\-pct=\fR<arg>
+CBR/VBR bias (0=CBR, 100=VBR)
+.TP
+\fB\-\-minsection\-pct=\fR<arg>
+GOP min bitrate (% of target)
+.TP
+\fB\-\-maxsection\-pct=\fR<arg>
+GOP max bitrate (% of target)
+.SS "Keyframe Placement Options:"
+.TP
+\fB\-\-kf\-min\-dist=\fR<arg>
+Minimum keyframe interval (frames)
+.TP
+\fB\-\-kf\-max\-dist=\fR<arg>
+Maximum keyframe interval (frames)
+.TP
+\fB\-\-disable\-kf\fR
+Disable keyframe placement
+.SS "VP8 Specific Options:"
+.TP
+\fB\-\-cpu\-used=\fR<arg>
+CPU Used (\fB\-16\fR..16)
+.TP
+\fB\-\-auto\-alt\-ref=\fR<arg>
+Enable automatic alt reference frames
+.TP
+\fB\-\-noise\-sensitivity=\fR<arg>
+Noise sensitivity (frames to blur)
+.TP
+\fB\-\-sharpness=\fR<arg>
+Loop filter sharpness (0..7)
+.TP
+\fB\-\-static\-thresh=\fR<arg>
+Motion detection threshold
+.TP
+\fB\-\-token\-parts=\fR<arg>
+Number of token partitions to use, log2
+.TP
+\fB\-\-arnr\-maxframes=\fR<arg>
+AltRef max frames (0..15)
+.TP
+\fB\-\-arnr\-strength=\fR<arg>
+AltRef filter strength (0..6)
+.TP
+\fB\-\-arnr\-type=\fR<arg>
+AltRef type
+.TP
+\fB\-\-tune=\fR<arg>
+Material to favor
+.IP
+psnr, ssim
+.TP
+\fB\-\-cq\-level=\fR<arg>
+Constant/Constrained Quality level
+.TP
+\fB\-\-max\-intra\-rate=\fR<arg>
+Max I\-frame bitrate (pct)
+.TP
+\fB\-\-screen\-content\-mode=\fR<arg
+Screen content mode
+.SS "VP9 Specific Options:"
+.TP
+\fB\-\-cpu\-used=\fR<arg>
+CPU Used (\fB\-8\fR..8)
+.TP
+\fB\-\-auto\-alt\-ref=\fR<arg>
+Enable automatic alt reference frames
+.TP
+\fB\-\-sharpness=\fR<arg>
+Loop filter sharpness (0..7)
+.TP
+\fB\-\-static\-thresh=\fR<arg>
+Motion detection threshold
+.TP
+\fB\-\-tile\-columns=\fR<arg>
+Number of tile columns to use, log2
+.TP
+\fB\-\-tile\-rows=\fR<arg>
+Number of tile rows to use, log2 (set to 0 while threads > 1)
+.TP
+\fB\-\-arnr\-maxframes=\fR<arg>
+AltRef max frames (0..15)
+.TP
+\fB\-\-arnr\-strength=\fR<arg>
+AltRef filter strength (0..6)
+.TP
+\fB\-\-arnr\-type=\fR<arg>
+AltRef type
+.TP
+\fB\-\-tune=\fR<arg>
+Material to favor
+.IP
+psnr, ssim
+.TP
+\fB\-\-cq\-level=\fR<arg>
+Constant/Constrained Quality level
+.TP
+\fB\-\-max\-intra\-rate=\fR<arg>
+Max I\-frame bitrate (pct)
+.TP
+\fB\-\-max\-inter\-rate=\fR<arg>
+Max P\-frame bitrate (pct)
+.TP
+\fB\-\-gf\-cbr\-boost=\fR<arg>
+Boost for Golden Frame in CBR mode (pct)
+.TP
+\fB\-\-lossless=\fR<arg>
+Lossless mode (0: false (default), 1: true)
+.TP
+\fB\-\-frame\-parallel=\fR<arg>
+Enable frame parallel decodability features
+.TP
+\fB\-\-aq\-mode=\fR<arg>
+Adaptive quantization mode (0: off (default), 1: variance 2: complexity, 3: cyclic refresh, 4: equator360)
+.TP
+\fB\-\-frame\-boost=\fR<arg>
+Enable frame periodic boost (0: off (default), 1: on)
+.TP
+\fB\-\-noise\-sensitivity=\fR<arg>
+Noise sensitivity (frames to blur)
+.TP
+\fB\-\-tune\-content=\fR<arg>
+Tune content type
+.IP
+default, screen
+.TP
+\fB\-\-color\-space=\fR<arg>
+The color space of input content:
+.IP
+unknown, bt601, bt709, smpte170, smpte240, bt2020, reserved, sRGB
+.TP
+\fB\-\-min\-gf\-interval=\fR<arg>
+min gf/arf frame interval (default 0, indicating in\-built behavior)
+.TP
+\fB\-\-max\-gf\-interval=\fR<arg>
+max gf/arf frame interval (default 0, indicating in\-built behavior)
+.TP
+\fB\-\-target\-level=\fR<arg>
+Target level (255: off (default); 0: only keep level stats; 10: level 1.0; 11: level 1.1; ... 62: level 6.2)
+.SS "Stream timebase (--timebase):"
+.IP
+The desired precision of timestamps in the output, expressed
+in fractional seconds. Default is 1/1000.
+.PP
+.SS "Included encoders:"
+.TP
+vp8
+\- WebM Project VP8 Encoder v1.6.0
+.TP
+vp9
+\- WebM Project VP9 Encoder v1.6.0 (default)
+.IP
+Use \fB\-\-codec\fR to switch to a non\-default encoder.
