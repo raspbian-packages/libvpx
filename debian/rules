@@ -1,0 +1,86 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all optimize=-lto
+export DEB_CFLAGS_MAINT_APPEND = -Wall
+export DEB_CXXFLAGS_MAINT_APPEND = -Wall
+
+include /usr/share/dpkg/architecture.mk
+
+configure_flags += \
+  --prefix=/usr \
+  --enable-pic \
+  --enable-shared \
+  --disable-install-bins \
+  --disable-install-srcs \
+  --size-limit=16384x16384 \
+  --enable-postproc \
+  --enable-multi-res-encoding \
+  --enable-temporal-denoising \
+  --enable-vp9-temporal-denoising \
+  --enable-vp9-postproc \
+  --enable-vp9-highbitdepth
+
+ifeq ($(DEB_HOST_ARCH_CPU),arm)
+configure_flags_neon := $(configure_flags) --target=armv7-linux-gcc
+BUILD_NEON=Yes
+endif
+
+ifeq ($(DEB_HOST_ARCH), arm64)
+configure_flags += --target=arm64-linux-gcc
+else
+ifeq ($(DEB_HOST_ARCH), armel)
+configure_flags += --target=generic-gnu --enable-small
+else
+ifeq ($(DEB_HOST_ARCH), armhf)
+# now armhf is ARMv7, but ARMv7 in vpx means NEON, which is not mandatory on armhf
+# thus we use generic-gnu
+configure_flags += --target=generic-gnu --enable-small
+else
+ifeq ($(DEB_HOST_ARCH), amd64)
+configure_flags += --target=x86_64-linux-gcc
+else
+ifeq ($(DEB_HOST_ARCH), i386)
+configure_flags += --target=x86-linux-gcc
+else
+ifeq ($(DEB_HOST_ARCH), hurd-i386)
+configure_flags += --target=x86-linux-gcc
+else
+configure_flags += --target=generic-gnu
+endif
+endif
+endif
+endif
+endif
+endif
+
+ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+CROSS=$(DEB_HOST_GNU_TYPE)-
+export CROSS
+endif
+
+builddir := $(CURDIR)/builddir
+
+%:
+	dh $@
+
+execute_after_dh_auto_clean:
+	rm -rf $(builddir) $(builddir)-neon
+
+override_dh_auto_configure:
+	mkdir -p $(builddir)
+	cd $(builddir); \
+	CFLAGS="${CPPFLAGS} ${CFLAGS}" ${CURDIR}/configure $(configure_flags)
+ifeq ($(BUILD_NEON), Yes)
+	mkdir -p $(builddir)-neon
+	cd $(builddir)-neon; \
+	CFLAGS="${CPPFLAGS} ${CFLAGS}" ${CURDIR}/configure $(configure_flags_neon)
+endif
+
+override_dh_auto_build:
+	dh_auto_build --builddirectory=$(builddir) -- verbose=yes dist
+ifeq ($(BUILD_NEON), Yes)
+	dh_auto_build --builddirectory=$(builddir)-neon -- verbose=yes dist
+endif
+	# don't use stripped library...
+	cp -v $(builddir)/libvpx_g.a \
+		$(builddir)/vpx-vp8-*/lib/libvpx.a
