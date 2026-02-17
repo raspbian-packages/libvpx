@@ -1,0 +1,10 @@
+0001-Relax-ABI-check.patch
+0002-encode_api_test-add-ConfigResizeChangeThreadCount.patch
+0003-VP8-disallow-thread-count-changes.patch
+0004-Fix-bug-with-smaller-width-bigger-size.patch
+0001-Add-test-vpx_image_test.cc.patch
+0002-Fix-integer-overflows-in-calc-of-stride_in_bytes.patch
+0003-Avoid-integer-overflows-in-arithmetic-operations.patch
+0004-Fix-a-bug-in-alloc_size-for-high-bit-depths.patch
+vpx_codec_enc_init_multi-fix-double-free-on-init-fai.patch
+CVE-2026-2447.patch
