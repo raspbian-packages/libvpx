@@ -1,0 +1,3 @@
+#! /usr/bin/dh-exec --with-scripts=subst-multiarch
+builddir/vpx-vp8-*/lib/libvpx.so.* /usr/lib/${DEB_HOST_MULTIARCH}/
+builddir-neon/vpx-vp8-*/lib/libvpx.so.* /usr/lib/${DEB_HOST_MULTIARCH}/vfp/neon [armhf armel]
